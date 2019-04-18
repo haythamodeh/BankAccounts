@@ -1,0 +1,42 @@
+@model UserTransaction
+<div class="center jumbotron">
+    <h2 class="text-success" style="display: inline-block;">Welcome, @Model.User.FirstName @Model.User.LastName</h2>
+    <a class="btn btn-danger logout" style="float:right;" href="/logout">Logout</a>
+</div>
+@{
+    float account = 0;
+    foreach(var t in @Model.User.TransactionsMade)
+        {
+            account += t.Amount;
+        }
+}
+<h3 class="text-center">Current Balance: $@account</h3>
+@if(TempData["InvalidWithdrawal"] != null)
+{
+    <p class="text-danger text-center">@TempData["InvalidWithdrawal"]</p>
+}
+<partial name="TransactionformPartial"  model="@Model.Transaction"/>
+<hr>
+<div id="table-wrapper">
+    <div id="table-scroll">
+        <table class="table">
+        <thead>
+            <tr>
+            <th scope="col"><span class="text text-center">Amount</span></th>
+            <th scope="col"><span class="text text-center">Date</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach(var t in @Model.User.TransactionsMade.OrderByDescending(b => b.created_at))
+                {
+                    <tr>
+                        <td>@t.Amount</td>
+                        <td>@t.created_at</td>
+                    </tr>
+                }
+            }
+        </tbody>
+        </table>
+    </div>
+</div>
